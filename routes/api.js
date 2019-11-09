@@ -3,7 +3,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {check,validationResult} = require('express-validator');
 const user = require('../model/users');
+const type = require('../model/type');
 const key = require('../config/keys');
+//const ValidateRegister = require('../helper/validation');
 const router = express.Router();
 
 router.get('/',function(req,res){
@@ -13,29 +15,41 @@ router.get('/',function(req,res){
 router.get('/register',function(req,res){
         res.send('Register working');
 })
+//get user types
+router.get('/userType',function(req,res){
+    type.find().then(type =>    
+        {res.status(200).json(type)}    
+    )
+})
+
 //register user
 router.post('/register',[
-    check('name').not().isEmpty().withMessage('Name is Required'),
+    check('firstname').not().isEmpty().withMessage('Name is Required'),
+    check('lastname').not().isEmpty().withMessage('LastName is Required'),
     check('email').isEmail().withMessage('Enter Valid Email'),
-    check('pass1').not().isEmpty().withMessage('Password Fild Required'),
-    check('pass2').not().isEmpty().custom((value, { req }) => value === req.body.pass1).withMessage('Password Not Match')
+    check('password').not().isEmpty().withMessage('Password Fild Required'),
+    check('passwordConf').not().isEmpty().custom((value, { req }) => value === req.body.password).withMessage('Password Not Match'),
+    check('type').not().isEmpty().withMessage('Select UserType')
 ],function(req,res){
-
+    
     //validation
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-           res.status(422).json({errors:errors});
+        console.log(errors);
+           {res.status(422).json(errors)};
         }else{
             
-            user.findOne({email:req.body.email}).then(user =>{
-                if(user){
+            user.findOne({email:req.body.email}).then(users =>{
+                if(users){
                     return res.status(422).json({msg:"User Alredy Registered...!",param:"err"})
                 }else{
 
                     const newUser = new user({
-                        name:req.body.name,
+                        name:req.body.firstname,
+                        lname:req.body.lastname,
                         email:req.body.email,
-                        password:req.body.pass1
+                        password:req.body.password,
+                        typeid:req.body.type
                     });
         
                     bcrypt.genSalt(10,(err,salt)=>{
@@ -43,11 +57,11 @@ router.post('/register',[
                                 newUser.password = hash;
                                 newUser.save()
                                 .then(user => {
-                                    console.log(user);
+                                    //console.log(user);
                                    return res.status(200).json(user);
                                 })
                                 .catch(err => {
-                                    console.log(err);
+                                   // console.log(err);
                                   return res.status(422).json(err);
                                 })
                             })
@@ -65,22 +79,24 @@ router.post('/login',[
 ],function(req,res){
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-            return res.status(422).json({errors:errors})
+            return res.status(422).json(errors)
     }else{
         const email = req.body.email;
         const password = req.body.password;
         user.findOne({email:email}).then(user =>{
              if(!user){
-                 return res.status(422).json({msg:"password Not Match",param:"err"})
+                 return res.status(422).json({msg:"Userid or Password Not Match",param:"err"})
              }else{
                  bcrypt.compare(password,user.password).then(isMatch => {
                      if(!isMatch){
-                            return res.status(422).json({msg:'Password Not Match',param:'err'})
+                            return res.status(422).json({msg:'Userid or Password Not Match',param:'err'})
                      }else{
                             const payload = {
-                                id:user.id,
+                                id:user._id,
                                 name:user.name,
-                                email:user.email
+                                lname:user.lname,
+                                email:user.email,
+                                typeid:user.typeid
                             };
 
                             jwt.sign(
