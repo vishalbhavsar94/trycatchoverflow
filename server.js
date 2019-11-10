@@ -3,12 +3,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
+const path =require('path');
 const db = require('./config/database').mongodb;
 //init app
 const app  = new express();
 // cors 
 app.use(cors());
-
+//set public folder
+app.use('/static', express.static(path.join(__dirname, 'public')))
 //connecting mongo db
 mongoose.Promise = global.Promise;
 //connect to mogoose
