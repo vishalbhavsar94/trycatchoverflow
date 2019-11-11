@@ -1,18 +1,17 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const {check,validationResult} = require('express-validator');
 const user = require('../model/users');
 const type = require('../model/type');
 const key = require('../config/keys');
 const {profileNameValidation,profilelNameValidation,
-        profileEmailValidation,validate} = require('../helper/validation');
+        profileEmailValidation,registerValidationRules,loginValidationRules,validate} = require('../helper/validation');
 const router = express.Router();
 const multer = require('multer');
 //set multer for file uploading
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-    cb(null,'/public')
+    cb(null,'public/profile')
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' +file.originalname )
@@ -38,22 +37,8 @@ router.get('/userType',function(req,res){
 })
 
 //register user
-router.post('/register',[
-    check('firstname').not().isEmpty().withMessage('Name is Required'),
-    check('lastname').not().isEmpty().withMessage('LastName is Required'),
-    check('email').isEmail().withMessage('Enter Valid Email'),
-    check('password').not().isEmpty().withMessage('Password Fild Required'),
-    check('passwordConf').not().isEmpty().custom((value, { req }) => value === req.body.password).withMessage('Password Not Match'),
-    check('type').not().isEmpty().withMessage('Select UserType')
-],function(req,res){
-    
-    //validation
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-        console.log(errors);
-           {res.status(422).json(errors)};
-        }else{
-            
+router.post('/register',registerValidationRules(),validate,function(req,res){
+             
             user.findOne({email:req.body.email}).then(users =>{
                 if(users){
                     return res.status(422).json({msg:"User Alredy Registered...!",param:"err"})
@@ -84,18 +69,9 @@ router.post('/register',[
                     )
                 }
             })
-           
-        }
 })
 
-router.post('/login',[
-    check('email').isEmail().withMessage('Enter Valid Email-ID'),
-    check('password').not().isEmpty().withMessage('Password Fild Required')
-],function(req,res){
-    const errors = validationResult(req);
-    if(!errors.isEmpty()){
-            return res.status(422).json(errors)
-    }else{
+router.post('/login',loginValidationRules(),validate,function(req,res){
         const email = req.body.email;
         const password = req.body.password;
         user.findOne({email:email}).then(user =>{
@@ -115,7 +91,6 @@ router.post('/login',[
                  })
              }           
         })
-    }
 })
 genrateToken = (data) =>{
     var token='';
@@ -124,7 +99,8 @@ genrateToken = (data) =>{
                 name:data.name,
                 lname:data.lname,
                 email:data.email,
-                typeid:data.typeid
+                typeid:data.typeid,
+                profile:data.profile
             };
 
            token = jwt.sign(
@@ -178,13 +154,28 @@ router.post('/profile/email',profileEmailValidation(),validate,function(req,res)
     })
 })
 router.post('/profile/upload',function(req,res){
+    
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             return res.status(500).json(err)
         } else if (err) {
             return res.status(500).json(err)
         }
-   return res.status(200).send(req.file)
- })
+        const where = {_id:req.body.id}
+        const filename = 'public/profile/'+req.file.filename;
+        const value = {$set:{profile:filename}}
+        user.updateOne(where,value,function(err,response){
+            if(err){
+                    res.status(422).json(err);
+            }else{
+                user.findOne({_id:req.body.id}).then(user =>{
+                    const token = genrateToken(user);
+                    res.status(200).json({success:true,token: "Bearer"+token})
+                })
+            }
+
+        })
+        
+    })
 })
 module.exports = router;

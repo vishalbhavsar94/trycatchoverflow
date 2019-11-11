@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {Container,Row,Col,Input,UncontrolledCollapse,Card,CardBody,Button,
         ListGroup,ListGroupItem,InputGroup,InputGroupAddon,Form} from "reactstrap";
 import {connect} from 'react-redux'
+import is_empty from '../helper/is_empty'
 import {updateProfile,uploadImage} from '../actions/ProfileAction'
 
  class Profile extends Component {
@@ -31,18 +32,17 @@ import {updateProfile,uploadImage} from '../actions/ProfileAction'
      }
      onImageUpload =e => {
         this.setState({
-            slectedFile:e.target.files[0],
+            selectedFile:e.target.files[0],
             loaded:true
         })
-        const data = new FormData() 
-        data.append('file', this.state.selectedFile)
-         
+        
      }
      onSubmitImage = e =>{
          e.preventDefault()
-        const data = new FormData() 
-        data.append('file', this.state.selectedFile)
-        this.props.uploadImage(data);
+         const data = new FormData() 
+         data.append('file', this.state.selectedFile)
+         data.append('id',this.state.id)
+         this.props.uploadImage(data);
      }
      OnUserUpdate = e =>{
          if(e.target.name === 'firstname'){
@@ -73,13 +73,18 @@ import {updateProfile,uploadImage} from '../actions/ProfileAction'
          
      }
     render() {
-        const {name,lname,email,id} = this.props.user
+        const {name,lname,email,profile} = this.props.user
         const error = this.state.error;
         const protErr={
             firstnameErr:'',
             lastnameErr:'',
             emailErr:'',
         }
+        if(profile)
+            var profileUrl='http://localhost:5000/'+profile;
+        else
+            var profileUrl='http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
+
         if(error){
             error.forEach(element => {
                 if(element.param === 'firstname')
@@ -97,10 +102,10 @@ import {updateProfile,uploadImage} from '../actions/ProfileAction'
                     <Row className='d-flex justify-content-center'>  
                         
                         <div>
-                                    <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" className="avatar rounded-circle img-thumbnail" alt="avatar"/>
+                                    <img src={profileUrl} className="avatar rounded-circle img-thumbnail" alt="avatar" style={{width:'190px',height:'190px'}}/>
                                     <h6></h6>
                                     <div className="custom-file" style={{marginLeft:'-30px'}}>
-                                        <Input type="file" className="custom-file-input" id="customFile" onChange={this.onImageUpload}/>
+                                        <Input type="file" className="custom-file-input" id="customFile" name='file' onChange={this.onImageUpload}/>
                                               <label className="custom-file-label" htmlFor="customFile">Choose file</label>
                                     </div>
                                     <br/>

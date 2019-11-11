@@ -10,7 +10,7 @@ const app  = new express();
 // cors 
 app.use(cors());
 //set public folder
-app.use('/static', express.static(path.join(__dirname, 'public')))
+ app.use('/public', express.static(path.join(__dirname, 'public')))
 //connecting mongo db
 mongoose.Promise = global.Promise;
 //connect to mogoose

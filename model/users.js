@@ -18,7 +18,10 @@ const userSchema = mongoose.Schema({
     },
     typeid:{
         type:String,
-    }
+    },
+    profile:{
+        type:String,
+    }  
 })
 
 module.exports  = user = mongoose.model('users',userSchema);

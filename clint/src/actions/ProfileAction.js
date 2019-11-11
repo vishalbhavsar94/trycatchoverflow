@@ -34,6 +34,21 @@ export const updateProfile = (userData,history) =>async dispatch =>{
 }
 export const uploadImage = (userData)=>async dispatch =>{
     axios.post('http://localhost:5000/api/profile/upload',userData)
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+    .then(res => {
+        const {token} = res.data
+        localStorage.removeItem('jwttoken');
+        localStorage.setItem('jwttoken',token);
+        setAuthToken(token);
+        const decode= jwt_decode(token);
+        dispatch({
+                type:SET_USER,
+                payload:decode
+        })
+    })
+    .catch(err => 
+        
+        dispatch({
+        type:PROFILE_ERROR,
+        payload:err.response.data
+}))
 }
