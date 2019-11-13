@@ -1,13 +1,17 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const user = require('../model/users');
-const type = require('../model/type');
 const key = require('../config/keys');
 const {profileNameValidation,profilelNameValidation,
-        profileEmailValidation,registerValidationRules,loginValidationRules,validate} = require('../helper/validation');
+        profileEmailValidation,registerValidationRules,
+        loginValidationRules,validateQustionRules,validate} = require('../helper/validation');
 const router = express.Router();
 const multer = require('multer');
+//Model Require
+const user = require('../model/users');
+const type = require('../model/type');
+const question = require('../model/question');
+
 //set multer for file uploading
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -177,5 +181,17 @@ router.post('/profile/upload',function(req,res){
         })
         
     })
+})
+router.post('/question',validateQustionRules(),validate,function(req,res){
+       const newQuestion = new question({
+           userid:req.body.id,
+           question:req.body.Question,
+           questionDesc:req.body.Editor,
+           view:0,
+       })
+       newQuestion.save().then(question => {
+                res.status(200).json(question);
+            }
+       )
 })
 module.exports = router;

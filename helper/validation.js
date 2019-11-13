@@ -30,6 +30,11 @@ const profileNameValidation = () => {
       body('password').not().isEmpty().withMessage('Password Fild Required')
     ]
   }
+  const validateQustionRules =() =>{
+    return [
+        body('Question').not().isEmpty().withMessage('Question Fild Require')
+    ]
+  }
   const validate = (req, res, next) => {
     const errors = validationResult(req)
     if (errors.isEmpty()) {
@@ -42,11 +47,13 @@ const profileNameValidation = () => {
       errors: extractedErrors,
     })
   }
+
   module.exports = {
     profileNameValidation,
     profilelNameValidation,
     profileEmailValidation,
     registerValidationRules,
     loginValidationRules,
+    validateQustionRules,
     validate,
   }  

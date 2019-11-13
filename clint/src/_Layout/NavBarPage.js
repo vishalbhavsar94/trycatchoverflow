@@ -22,6 +22,20 @@ const NavBarPage = (props) => {
   }
   const {name,lname,email,} = props.user
         const authLinks = (
+          <React.Fragment>
+                  <UncontrolledDropdown>
+                      <DropdownToggle nav caret>
+                            Questions
+                      </DropdownToggle>
+                            <DropdownMenu right>
+                                  <DropdownItem>
+                                      <Link to='/askquestion' className='nav-link'>AskQuestions</Link>
+                                  </DropdownItem>
+                                  <DropdownItem>
+                                       <Link to='/myquestion' className='nav-link'>MyQuestion</Link>
+                                  </DropdownItem>
+                            </DropdownMenu>
+                  </UncontrolledDropdown>              
                 <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                     {name+lname}
@@ -34,6 +48,7 @@ const NavBarPage = (props) => {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              </React.Fragment>
           )
       const LoginLink = (
             <React.Fragment>

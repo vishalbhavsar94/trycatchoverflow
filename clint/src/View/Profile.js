@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {Container,Row,Col,Input,UncontrolledCollapse,Card,CardBody,Button,
         ListGroup,ListGroupItem,InputGroup,InputGroupAddon,Form} from "reactstrap";
 import {connect} from 'react-redux'
-import is_empty from '../helper/is_empty'
 import {updateProfile,uploadImage} from '../actions/ProfileAction'
 
  class Profile extends Component {

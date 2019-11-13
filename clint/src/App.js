@@ -6,6 +6,7 @@ import Register from './View/Register'
 import Dashbord from './View/Dashbord'
 import Profile from './View/Profile'
 import AskQuestion from './View/AskQuestion'
+import MyQuestion from './View/MyQuestion'
 import {BrowserRouter as Router , Route,Switch} from 'react-router-dom'
 import store from './store'
 import {Provider} from 'react-redux'
@@ -37,6 +38,7 @@ export default class App extends Component {
                         <PrivateRoute exact path='/dashbord' component={Dashbord} />
                         <PrivateRoute exact path='/profile' component={Profile} />           
                         <PrivateRoute exact path='/askquestion' component={AskQuestion} />           
+                        <PrivateRoute exact path='/myquestion' component={MyQuestion} />         
                 </Switch>
                 <Route exact path="/" component={LandingPage}></Route>
                 <Route exact path="/Login" component={Login}></Route>
