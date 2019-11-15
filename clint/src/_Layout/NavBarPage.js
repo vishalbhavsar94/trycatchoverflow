@@ -63,7 +63,7 @@ const NavBarPage = (props) => {
   return (
     <div>
       <Navbar color="faded" light expand="md"  className='bg-info'>
-        <NavbarBrand href="/">reactstrap</NavbarBrand>
+        <NavbarBrand href="/">TryCatchOverFlow</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>

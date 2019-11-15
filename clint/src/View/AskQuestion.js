@@ -15,6 +15,13 @@ class AskQuestion extends Component {
             errors:[]
         }
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.errors){
+            this.setState({
+                errors:nextProps.errors.errors
+            })
+        } 
+    }
     onSubmitHandle = e =>{
         e.preventDefault();
         const userData = {
@@ -31,6 +38,14 @@ class AskQuestion extends Component {
         })
     }
     render() {
+    const errors = this.state.errors
+    var questionErr = null
+    if(errors){
+        errors.forEach(element => {
+            questionErr = element.msg
+        });
+    }
+    console.log(errors);
         return (
             <div>
                 <Container>
@@ -42,8 +57,9 @@ class AskQuestion extends Component {
                                 </CardHeader>
                                 <CardBody>
                                     <FormGroup>
-                                        <Label htmlFor='Question'>Question</Label>
+                                        <Label htmlFor='Question'>Question <span className='text-danger'>*</span></Label>
                                         <Input name='Question' id='Question' onChange={this.onChangeHandler}/>
+                                            <p className='text-danger'>{questionErr}</p>
                                     </FormGroup>
                                     <Label >Question Description</Label>
                                     <CKEditor 

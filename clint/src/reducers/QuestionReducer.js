@@ -1,6 +1,7 @@
-import {QUESTION_ERROR} from '../actions/Type'
+import {QUESTION_ERROR, GET_QUESTIONS} from '../actions/Type'
 const initialSatet={
-    errors:{}
+    errors:{},
+    questions:[]
 }
 
 export default function (state = initialSatet,action){
@@ -9,6 +10,11 @@ export default function (state = initialSatet,action){
                 return{
                         ...state,
                         errors:action.payload
+                }
+            case GET_QUESTIONS:
+                return{
+                    ...state,
+                    questions:action.payload
                 }
             default:
                 return state

@@ -20,3 +20,9 @@
 .App-link {
   color: #09d3ac;
 }
+.jumbotron{
+  background-image: url(https://stmed.net/sites/default/files/programming-wallpapers-30748-7986532.png);
+    background-position: center;
+    background-blend-mode: difference;
+    height: 400px;
+}

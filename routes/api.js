@@ -194,4 +194,9 @@ router.post('/question',validateQustionRules(),validate,function(req,res){
             }
        )
 })
+router.get('/question/:id',function(req,res){
+    question.find({userid:req.params.id}).then(question =>{
+        res.status(200).json(question);
+    })
+})
 module.exports = router;

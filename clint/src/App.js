@@ -14,6 +14,7 @@ import setAuthToken from './helper/set_authtoken'
 import jwt_decode from 'jwt-decode'
 import {SET_USER} from './actions/Type'
 import PrivateRoute from './_Layout/PrivateRoute'
+import './App.css'
 
 if(localStorage.jwttoken){
     const jwttoken = localStorage.jwttoken;  
