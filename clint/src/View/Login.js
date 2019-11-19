@@ -17,7 +17,7 @@ class Login extends Component {
         }
     componentWillReceiveProps(nextProps){
         if (nextProps.isAuthenticated) {
-                this.props.history.push('/dashbord');
+                this.props.history.push('/topquestions');
             } 
         if(nextProps.errors){
             if(nextProps.errors.param === "err"){
@@ -33,7 +33,7 @@ class Login extends Component {
     }
     componentDidMount(){
         if(this.props.isAuthenticated){
-            this.props.history.push('/dashbord');
+            this.props.history.push('/topquestions');
         }
     }
     onChange= e => {

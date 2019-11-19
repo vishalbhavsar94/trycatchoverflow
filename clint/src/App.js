@@ -7,6 +7,8 @@ import Dashbord from './View/Dashbord'
 import Profile from './View/Profile'
 import AskQuestion from './View/AskQuestion'
 import MyQuestion from './View/MyQuestion'
+import TopQuestions from './View/TopQuestions'
+import ViewQuestions from './View/ViewQuestion'
 import {BrowserRouter as Router , Route,Switch} from 'react-router-dom'
 import store from './store'
 import {Provider} from 'react-redux'
@@ -40,6 +42,9 @@ export default class App extends Component {
                         <PrivateRoute exact path='/profile' component={Profile} />           
                         <PrivateRoute exact path='/askquestion' component={AskQuestion} />           
                         <PrivateRoute exact path='/myquestion' component={MyQuestion} />         
+                        <PrivateRoute exact path='/topquestions' component={TopQuestions} />
+                        <PrivateRoute exact path='/viewquestions' component={ViewQuestions} />
+
                 </Switch>
                 <Route exact path="/" component={LandingPage}></Route>
                 <Route exact path="/Login" component={Login}></Route>

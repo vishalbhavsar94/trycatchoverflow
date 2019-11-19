@@ -11,6 +11,8 @@ const multer = require('multer');
 const user = require('../model/users');
 const type = require('../model/type');
 const question = require('../model/question');
+const answer = require('../model/answer');
+const comments = require('../model/comments')
 
 //set multer for file uploading
 var storage = multer.diskStorage({
@@ -27,12 +29,6 @@ router.get('/',function(req,res){
         res.send('Api Working');
 });
 
-router.get('/register',function(req,res){
-        res.send('Register working');
-})
-router.get('/profile/username',function(req,res){
-    res.send('profile working');
-})
 //get user types
 router.get('/userType',function(req,res){
     type.find().then(type =>    
@@ -198,5 +194,41 @@ router.get('/question/:id',function(req,res){
     question.find({userid:req.params.id}).then(question =>{
         res.status(200).json(question);
     })
+})
+router.get('/topquestions',function(req,res){
+    question.find({},'question _id date').then(qtn => {res.status(200).json(qtn)})
+})
+router.get('/questiondetails/:id',function(req,res){
+    const id = req.params.id
+    question.findOne({_id:id}).then(qtn => {
+        res.status(200).json(qtn);
+    })
+})
+router.get('/questiondetails/answers/:id',function(req,res){
+    const qtnid = req.params.id;
+    answer.find({questionid:qtnid}).then(answer => {
+            res.status(200).json(answer)
+    })
+})
+router.get('/questiondetails/comments/:id',function(req,res){
+    const qtnid = req.params.id;
+    comments.find({questionid:qtnid}).then(comments => {
+            res.status(200).json(comments)
+    })
+})
+router.post('/questiondetails/answers',function(req,res){
+    const newAnswer = new answer({
+        answer:req.body.answer,
+        question:req.body.qtnid,
+        userid:req.body.userid
+    })
+        newAnswer.save()
+        .then(answer => { 
+            return res.status(200).json(answer)
+        })
+        .catch(err => {
+            return res.status(422).json(err)
+        })
+        
 })
 module.exports = router;

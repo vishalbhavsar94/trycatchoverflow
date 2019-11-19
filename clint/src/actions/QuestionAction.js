@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {QUESTION_ERROR, GET_QUESTIONS} from '../actions/Type'
+import {QUESTION_ERROR, GET_QUESTIONS, GET_TOP_QUESTIOS, GET_QUESTION_DETAILS, GET_QUESTION_ANSWERS, GET_QUESTION_COMMENTS} from '../actions/Type'
 export const SubmitQuestion = (userData,history) => async dispatch => {
     axios.post('http://localhost:5000/api/question',userData)
     .then(res => history.push('myquestion'))
@@ -18,4 +18,59 @@ export const GetMyQuestion = (id) => async dispatch => {
         type:QUESTION_ERROR,
         payload:err.response.data
     }) )
+}
+export const getTopQuestions = () => async dispatch =>{
+    axios.get('http://localhost:5000/api/topquestions')
+    .then(res => dispatch({
+        type:GET_TOP_QUESTIOS,
+        payload:res.data
+    }))
+    .catch(err => dispatch({
+        type:QUESTION_ERROR,
+        payload:err
+    }))
+}
+export const getQuestionsDetails = (id) => async dispatch => {
+    axios.get('http://localhost:5000/api/questiondetails/'+id)
+    .then(res => dispatch({
+        type:GET_QUESTION_DETAILS,
+        payload:res.data
+    }))
+    .catch(err => dispatch({
+        type:QUESTION_ERROR,
+        payload:err
+    }))
+}
+export const getQuestionAnswer = (qtnid) => async dispatch => {
+    axios.get(`http://localhost:5000/api/questiondetails/answers/${qtnid}`)
+    .then(res => dispatch({
+        type:GET_QUESTION_ANSWERS,
+        payload:res.data
+    }))
+    .catch(err => dispatch({
+        type:QUESTION_ERROR,
+        payload:err
+    }) )
+}
+export const getQuestionComments = (qtnid) => async dispatch => {
+    axios.get(`http://localhost:5000/api/questiondetails/comments/${qtnid}`)
+    .then(res => dispatch({
+        type:GET_QUESTION_COMMENTS,
+        payload:res.data
+    }))
+    .catch(err => dispatch({
+        type:QUESTION_ERROR,
+        payload:err
+    }))
+}
+export const submitAnswer = (userData,history) => async dispatch => {
+    axios.post('http://localhost:5000/api/questiondetails/answers',userData)
+    .then(res => dispatch({
+        type:GET_QUESTION_ANSWERS,
+        payload:res.data
+    }))
+    .catch(err => dispatch({
+        type:QUESTION_ERROR,
+        payload:err
+    }))
 }
