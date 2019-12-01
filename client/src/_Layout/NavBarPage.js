@@ -34,6 +34,9 @@ const NavBarPage = (props) => {
                                   <DropdownItem>
                                        <Link to='/myquestion' className='nav-link'>MyQuestion</Link>
                                   </DropdownItem>
+                                  <DropdownItem>
+                                       <Link to='/topquestions' className='nav-link'>TopQuestions</Link>
+                                  </DropdownItem>
                             </DropdownMenu>
                   </UncontrolledDropdown>              
                 <UncontrolledDropdown nav inNavbar>

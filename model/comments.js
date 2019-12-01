@@ -12,6 +12,14 @@ const commentSchema = mongoose.Schema({
         userid:{
             type:String,
             require:true
+        },
+        date:{
+            type:Date,
+            default:Date.now
+        },
+        username:{
+            type:String,
+            require:true
         }
         
 })

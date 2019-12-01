@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 const key = require('../config/keys');
 const {profileNameValidation,profilelNameValidation,
         profileEmailValidation,registerValidationRules,
-        loginValidationRules,validateQustionRules,validate} = require('../helper/validation');
+        loginValidationRules,validateQustionRules,
+        valdiateAnswerRules,validateCommentRules,validate} = require('../helper/validation');
 const router = express.Router();
 const multer = require('multer');
 //Model Require
@@ -216,10 +217,10 @@ router.get('/questiondetails/comments/:id',function(req,res){
             res.status(200).json(comments)
     })
 })
-router.post('/questiondetails/answers',function(req,res){
+router.post('/questiondetails/answers',valdiateAnswerRules(),validate,function(req,res){
     const newAnswer = new answer({
         answer:req.body.answer,
-        question:req.body.qtnid,
+        questionid:req.body.qtnid,
         userid:req.body.userid
     })
         newAnswer.save()
@@ -230,5 +231,20 @@ router.post('/questiondetails/answers',function(req,res){
             return res.status(422).json(err)
         })
         
+})
+router.post('/questiondetails/comments',validateCommentRules(),validate,function(req,res){
+    const newComment = new comments({
+        comment:req.body.comment,
+        questionid:req.body.qtnid,
+        userid:req.body.userid,
+        username:req.body.username
+    })
+    newComment.save()
+    .then(comment =>{
+        return res.status(200).json(comment)
+    })
+    .catch(error => {
+        return res.status(422).json(error)
+    })
 })
 module.exports = router;

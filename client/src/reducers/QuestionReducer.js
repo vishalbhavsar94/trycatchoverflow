@@ -1,8 +1,7 @@
-import {QUESTION_ERROR, GET_QUESTIONS, GET_TOP_QUESTIOS, GET_QUESTION_DETAILS, GET_QUESTION_ANSWERS, GET_QUESTION_COMMENTS} from '../actions/Type'
+import {QUESTION_ERROR, GET_QUESTIONS, GET_TOP_QUESTIOS, GET_QUESTION_DETAILS, GET_QUESTION_ANSWERS, GET_QUESTION_COMMENTS, GET_SUBMITED_ANSWERS, GET_SUBMITED_COMMENT} from '../actions/Type'
 import { stat } from 'fs'
-import { get } from 'http'
 const initialSatet={
-    errors:{},
+    errors:[],
     questions:[],
     topquestions:[],
     qtndetails:[],
@@ -41,6 +40,16 @@ export default function (state = initialSatet,action){
                 return{
                     ...state,
                     comments:action.payload
+                }
+            case GET_SUBMITED_ANSWERS:
+                return{
+                    ...state,
+                    answers:[...state.answers,action.payload]
+                }
+            case GET_SUBMITED_COMMENT:
+                return{
+                    ...state,
+                    comments:[action.payload,...state.comments]
                 }
             default:
                 return state

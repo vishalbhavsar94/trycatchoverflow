@@ -35,6 +35,16 @@ const profileNameValidation = () => {
         body('Question').not().isEmpty().withMessage('Question Fild Require')
     ]
   }
+  const valdiateAnswerRules =() => {
+    return [
+        body('answer').not().isEmpty().withMessage('Answer require')
+    ]
+  }
+  const validateCommentRules =() =>{
+    return [
+      body('comment').not().isEmpty().withMessage('Comment Require....!')
+    ] 
+  }
   const validate = (req, res, next) => {
     const errors = validationResult(req)
     if (errors.isEmpty()) {
@@ -55,5 +65,7 @@ const profileNameValidation = () => {
     registerValidationRules,
     loginValidationRules,
     validateQustionRules,
-    validate,
+    valdiateAnswerRules,
+    validateCommentRules,
+    validate
   }  
